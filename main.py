@@ -16,7 +16,7 @@ if place:
         filtered_content = get_data(place=place, forecast_days=days)
 
         if option == "Temperature":
-            temperatures = [data["main"]["temp"] /10 for data in filtered_content]
+            temperatures = [data["main"]["temp"] / 10 for data in filtered_content]
             dates = [data["dt_txt"] for data in filtered_content]
             # Plotting graph
             figure = px.line(x=dates, y=temperatures, labels={"x": "Dates", "y": "Temperatures(C)"})
@@ -25,10 +25,16 @@ if place:
         if option == "Sky":
             images = {"Clear": "sky_images/clear.png", "Clouds": "sky_images/cloud.png",
                       "Rain": "sky_images/rain.png", "Snow": "sky_images/snow.png"}
+
+            sky_caption = {"Clear": "Clear Sky", "Clouds": "Cloudy",
+                           "Rain": "Rainy", "Snow": "Snowy"}
+
             sky = [sky_data["weather"][0]["main"] for sky_data in filtered_content]
-            # Translating data from sky and images
+            # Translating data from sky and images, sky and sky_caption
             image_paths = [images[condition] for condition in sky]
-            st.image(image_paths, width=100)
+            captions = [sky_caption[condition] for condition in sky]
+
+            st.image(image_paths, width=100, caption=captions)
     except KeyError:
         st.error("Place does not exist!!")
 
